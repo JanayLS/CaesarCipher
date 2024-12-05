@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decrypt and Encrypt</title>
+</head>
+<body>
+    <form id="myform">
+        <h1>Decrypt or Encrypt</h1>
+        <h3>Enter a message:</h3>
+        <textarea id="userMessage" rows="3" cols="25"></textarea>
+        
+        <br><br>
+
+        <label>Decrypt or Encrypt?</label><br>
+        <select id="deen">
+            <option value="d">Decrypt</option>
+            <option value="e">Encrypt</option>
+        </select>
+
+        <br><br>
+
+        <label>Number of Shift</label><br>
+        <input type="number" min="0" max="25" id="numShift">
+
+        <br><br>
+
+        <label>Direction of Shift</label><br>
+        <select id="left_or_right">
+            <option id="left">Left</option>
+            <option id="right">Right</option>
+        </select>
+
+        <br><br><br>
+
+        <button id="submit" type="submit">Submit</button>
+    </form>
+
+
+    <h3>Output:</h3>
+    <p id="result"></p>
+
+
+
+
+    <script>
+        // gets form from html 
+        const form = document.getElementById("myform")
+
+        // list of the alphabet
+        let alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+        
+        // when the submit button is clicked
+        form.addEventListener("submit", function(event){
+            // stops page from reloading
+            event.preventDefault()
+
+            // gets the value of whether the user wants the code encrypted or decrypted
+            let selected = form.elements['deen'].value
+            // gets the message the user wants to encrypt or decrypt
+            let userMessage=document.getElementById("userMessage").value.toLowerCase()
+            // gets the number of shifts the user wants
+            let shift = parseInt(document.getElementById("numShift").value)
+            // gets the direction of left or right from the user
+            let left_or_right = form.elements['left_or_right'].value
+
+
+            let result = "";
+
+            // if the user selects DECRYPT, the decrypt function is initiated
+                if (selected == 'd'){
+                    result = decrypt(userMessage,shift,left_or_right)
+                }
+            // if the user selects ENCRYPT, the encrypt function is initiated
+                else {
+                    result = encrypt(userMessage,shift,left_or_right)
+
+            }
+
+            // gets the result paragraph tags from the HTML and prints out the output
+            document.getElementById("result").innerText = result
+        });
+
+        // takes the already encrypted code and decrypts it
+        function decrypt(message, shift, direction) {   
+            let result = "";
+            // if the user selects left, the shift is switched to negative to move the index left
+            if (direction == "left"){
+                shift = -shift
+            }
+            // iterates through each letter in the message the user wants to decrypt
+            for (let i = 0; i<message.length; i++) {
+                // gets a character from the user's message
+                let character = message[i]
+                // once the character is found in the alphabet list, it gets the index of that
+                // character in the list and subtracts the shift, adds 26, and then find the remainder of 
+                // the value divided by 26 to get the new index in the alphabet.
+                if (alphabet.includes(character)) {
+                    let index = alphabet.indexOf(character)
+                    let newIndex = (index - shift + 26) % 26
+                    // new character is added to the result
+                    result += alphabet[newIndex]
+                } 
+                else {
+                    result += character
+                }
+            }
+            return result
+        }
+
+        // takes the decrypted code and encrypt it
+        function encrypt(message, shift, direction) {
+            let result = "";
+
+            // if the user selects left, the shift is switched to negative to move the index left
+            if (direction == "left"){
+                shift = -shift
+            }
+            // iterates through each letter in the message the user wants to decrypt
+            for (let i = 0; i<message.length; i++) {
+                // gets a character from the user's message
+                let character = message[i]
+                // once the character is found in the alphabet list, it gets the index of that
+                // character in the list and adds the shift, adds 26, and then find the remainder of 
+                // the value divided by 26 to get the new index in the alphabet.
+                if (alphabet.includes(character)) {
+                    let index = alphabet.indexOf(character)
+                    let newIndex = (index + shift + 26) % 26
+                    // new character is added to the result
+                    result += alphabet[newIndex]
+                } 
+                else {
+                    result += character
+                }
+            }
+            return result
+        }
+
+    </script>
+</body>
+</html>
